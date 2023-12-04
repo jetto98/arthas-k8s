@@ -1,10 +1,10 @@
 package com.alibaba.arthas.tunnel.server.cluster;
 
+import com.alibaba.arthas.tunnel.server.AgentClusterInfo;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import com.alibaba.arthas.tunnel.server.AgentClusterInfo;
 
 /**
  * 保存agentId连接到哪个具体的 tunnel server，集群部署时使用
