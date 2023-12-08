@@ -1,6 +1,7 @@
 package com.alibaba.arthas.tunnel.server.app.configuration;
 
 import com.alibaba.arthas.tunnel.server.node.InMemoryNodeStore;
+import com.alibaba.arthas.tunnel.server.node.RegisterKeyStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -13,6 +14,13 @@ public class NodeStoreConfig {
     public InMemoryNodeStore inMemoryNodeStore(@Autowired CacheManager cacheManager) {
         Cache cache = cacheManager.getCache("inMemoryNodeStore");
         InMemoryNodeStore store = new InMemoryNodeStore();
+        store.setCache(cache);
+        return store;
+    }
+    @Bean
+    public RegisterKeyStore registerKeyStore(@Autowired CacheManager cacheManager) {
+        Cache cache = cacheManager.getCache("registerKeyStore");
+        RegisterKeyStore store = new RegisterKeyStore();
         store.setCache(cache);
         return store;
     }

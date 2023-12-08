@@ -41,4 +41,8 @@ public class NodeInfo {
     public void setArthasAttached(boolean arthasAttached) {
         this.arthasAttached = arthasAttached;
     }
+
+    public String httpAddress() {
+        return "http://" + this.ip + ":" + this.port;
+    }
 }
