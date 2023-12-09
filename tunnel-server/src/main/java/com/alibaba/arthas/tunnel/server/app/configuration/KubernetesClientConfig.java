@@ -4,11 +4,12 @@ import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.util.ClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 
-//@Configuration
+@Configuration
 public class KubernetesClientConfig {
 
     private final static Logger logger = LoggerFactory.getLogger(KubernetesClientConfig.class);

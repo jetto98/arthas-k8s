@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arthas-center-server
+  labels:
+    app: arthas-center-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: arthas-center-server
+  template:
+    metadata:
+      name: arthas-center-server
+      labels:
+        app: arthas-center-server
+    spec:
+      containers:
+        - name: arthas-center-server
+          image: jetto/arthas-server:1.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+      

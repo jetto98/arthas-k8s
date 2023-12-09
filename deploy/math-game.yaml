@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: math-game
+  labels:
+    app: math-game
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: math-game
+  template:
+    metadata:
+      name: math-game
+      labels:
+        app: math-game
+    spec:
+      containers:
+        - name: math-game
+          image: jetto/math-game:1.0.0
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      
