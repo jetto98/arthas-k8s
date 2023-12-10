@@ -28,3 +28,5 @@ pom.xml.versionsBackup
 
 # VSCode
 .vscode/
+
+*.log

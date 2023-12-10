@@ -2,13 +2,17 @@ package com.alibaba.arthas.tunnel.server.app.web;
 
 import com.alibaba.arthas.tunnel.server.app.exception.ServerException;
 import com.alibaba.arthas.tunnel.server.model.NodeInfo;
+import com.alibaba.arthas.tunnel.server.model.PodInfo;
 import com.alibaba.arthas.tunnel.server.node.DefaultNodeEndpoint;
 import com.alibaba.arthas.tunnel.server.node.InMemoryNodeStore;
+import com.alibaba.arthas.tunnel.server.node.PodIpStore;
 import com.alibaba.arthas.tunnel.server.node.RegisterKeyStore;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,14 +29,18 @@ public class ArthasAgentNodeController {
     private InMemoryNodeStore nodeStore;
 
     @Autowired
+    private PodIpStore podIpStore;
+
+    @Autowired
     private RegisterKeyStore keyStore;
 
     @Autowired
     private RestTemplate restTemplate;
 
     @PostMapping("/init")
-    public String initNode() {
+    public String initNode(@RequestBody PodInfo podInfo) {
         String uuid = keyStore.generateKey();
+        podIpStore.put(podInfo.getNamespace() + "_" + podInfo.getName(), podInfo.getPodIp());
         return uuid;
     }
 
@@ -41,6 +49,14 @@ public class ArthasAgentNodeController {
         if (!keyStore.checkKey(registerKey)) {
             logger.error("Invalid register key.");
 //            return "failed";
+        }
+        if (!StringUtils.hasLength(nodeInfo.getIp())) {
+            String podIp = podIpStore.getPodIp(nodeInfo.getName());
+            if (!StringUtils.hasLength(podIp)) {
+                logger.info("node [{}] register failed, error: invalid ip.", nodeInfo.getName());
+                return "failed";
+            }
+            nodeInfo.setIp(podIp);
         }
         nodeStore.addNode(nodeInfo.getName(), nodeInfo);
         logger.info("node [{}] is registered.", nodeInfo.getName());
@@ -73,7 +89,7 @@ public class ArthasAgentNodeController {
         body.put("pid", pid);
         body.put("agentId", nodeName);
         // todo: dynamic get
-        body.put("tunnelServer", "ws://127.0.0.1:7777/ws");
+        body.put("tunnelServer", "ws://arthas-center-svc:7777/ws");
         String url = node.httpAddress() + DefaultNodeEndpoint.ATTACH;
         ResponseEntity<String> res = restTemplate.postForEntity(url, body, String.class);
         if (!res.getStatusCode().is2xxSuccessful()) {
