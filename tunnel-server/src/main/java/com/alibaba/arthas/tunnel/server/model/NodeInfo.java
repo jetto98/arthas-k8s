@@ -8,7 +8,7 @@ public class NodeInfo {
 
     private String name;
 
-    private boolean arthasAttached;
+    private boolean tunnelConnected;
 
     public String getIp() {
         return ip;
@@ -34,12 +34,12 @@ public class NodeInfo {
         this.name = name;
     }
 
-    public boolean isArthasAttached() {
-        return arthasAttached;
+    public boolean isTunnelConnected() {
+        return tunnelConnected;
     }
 
-    public void setArthasAttached(boolean arthasAttached) {
-        this.arthasAttached = arthasAttached;
+    public void setTunnelConnected(boolean tunnelConnected) {
+        this.tunnelConnected = tunnelConnected;
     }
 
     public String httpAddress() {

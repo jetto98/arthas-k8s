@@ -4,6 +4,6 @@ metadata:
   name: arthas-center-cm
 data:
   SELF_HOST: "arthas-center-svc.default.svc.cluster.local"
-  AGENT_INIT_SHELL_DOWN_URL: "http://192.168.8.6:5244/d/as-agent.sh?sign=M878ApRgjUIkW0iQtcAwaCl1a8-jENKWbma2vvWcqgA=:0"
-  AGENT_TAR_DOWN_URL: "http://192.168.8.6:5244/d/as-agent.tar.gz?sign=1nTqxaevQtpTPzYHS5GfDBJ97uLIUAqg8B2wbgnZ1Oc=:0"
+  AGENT_INIT_SHELL_DOWN_URL: "http://192.168.3.47:5244/d/local/as-agent.sh"
+  AGENT_TAR_DOWN_URL: "http://192.168.3.47:5244/d/local/as-agent.tar.gz"
   AGENT_PORT: "13736"

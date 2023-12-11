@@ -32,10 +32,11 @@ public class AgentInstallService {
     @Async("asyncKubeExecExecutor")
     public void install(String namespace, String podName, String containerName, String registerKey, String agentPort) throws IOException, ApiException, InterruptedException {
         Exec exec = new Exec();
-        String[] command = {"sh", "-c", generateInstallCmd(registerKey, podName, agentPort)};
+        String[] command = {"sh", "-c", generateInstallCmd(registerKey, namespace, podName, agentPort)};
         Process process = exec.exec(namespace, podName, command, containerName, false, false);
+        logger.info(command[2]);
         process.waitFor();
-        try (InputStream inputStream = process.getInputStream();) {
+        try (InputStream inputStream = process.getInputStream()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             StringBuilder sb = new StringBuilder();
@@ -49,13 +50,14 @@ public class AgentInstallService {
         }
     }
 
-    private String generateInstallCmd(String registerKey, String podName, String agentPort) {
+    private String generateInstallCmd(String registerKey, String namespace, String podName, String agentPort) {
         String remove = "rm -f as-agent.*";
-        String getShell = String.format("wget %s -o as-agent.sh", shellDownUrl);
+        String getShell = String.format("wget %s -O as-agent.sh", shellDownUrl);
         String chmod = "chmod +x as-agent.sh";
         String registerUrl = String.format("http://%s:8080/api/node/register", selfHost);
+        String agentId = namespace + "_" + podName;
         String runAgent = String.format("sh as-agent.sh %s %s %s %s %s",
-                tarDownUrl, registerKey, podName, registerUrl, agentPort);
+                tarDownUrl, registerKey, agentId, registerUrl, agentPort);
         StringJoiner stringJoiner = new StringJoiner(AND);
         return stringJoiner
                 .add(remove)
