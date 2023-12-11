@@ -1,5 +1,6 @@
-package com.alibaba.arthas.tunnel.server.node;
+package com.alibaba.arthas.tunnel.server.node.service;
 
+import com.alibaba.arthas.tunnel.server.node.store.InMemoryNodeStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,7 +10,7 @@ import java.util.Collection;
 
 @Component
 @DependsOn({"inMemoryNodeStore"})
-public class HealthCheckService {
+public class NodeHealthCheckService {
 
 
     @Autowired

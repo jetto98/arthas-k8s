@@ -3,15 +3,13 @@ package com.alibaba.arthas.tunnel.server.app.web;
 import com.alibaba.arthas.tunnel.server.model.PodInfo;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
-import io.kubernetes.client.openapi.models.V1Namespace;
-import io.kubernetes.client.openapi.models.V1NamespaceList;
-import io.kubernetes.client.openapi.models.V1Pod;
-import io.kubernetes.client.openapi.models.V1PodList;
+import io.kubernetes.client.openapi.models.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/k8s")
@@ -30,6 +28,17 @@ public class KubernetesController {
             res.add(podInfo);
         }
         return res;
+    }
+
+    @GetMapping("/pods/{namespace}/{name}")
+    public List<String> getPodContainers(@PathVariable("namespace") String namespace,
+                                         @PathVariable("name") String name) throws ApiException {
+        CoreV1Api api = new CoreV1Api();
+        V1Pod pod = api.readNamespacedPod(name, namespace, null);
+        return Objects.requireNonNull(Objects.requireNonNull(pod.getStatus()).getContainerStatuses())
+                .stream()
+                .map(V1ContainerStatus::getName)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/namespaces")

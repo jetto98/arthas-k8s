@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: math-game
-          image: jetto/math-game:1.0.1
+          image: jetto/math-game:1.0.0
           imagePullPolicy: IfNotPresent
       restartPolicy: Always
       

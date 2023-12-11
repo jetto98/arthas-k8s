@@ -1,4 +1,4 @@
-package com.alibaba.arthas.tunnel.server.node;
+package com.alibaba.arthas.tunnel.server.node.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

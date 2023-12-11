@@ -7,6 +7,16 @@ public class PodInfo {
 
     private String podIp;
 
+    private String containerName;
+
+    public String getContainerName() {
+        return containerName;
+    }
+
+    public void setContainerName(String containerName) {
+        this.containerName = containerName;
+    }
+
     public String getName() {
         return name;
     }

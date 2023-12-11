@@ -1,7 +1,9 @@
-package com.alibaba.arthas.tunnel.server.node;
+package com.alibaba.arthas.tunnel.server.node.service;
 
 import com.alibaba.arthas.tunnel.server.model.HealthCheckInfo;
 import com.alibaba.arthas.tunnel.server.model.NodeInfo;
+import com.alibaba.arthas.tunnel.server.node.DefaultNodeEndpoint;
+import com.alibaba.arthas.tunnel.server.node.store.InMemoryNodeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +36,23 @@ public class HealthChecker {
             try {
                 String res = restTemplate.getForObject(url, String.class);
                 if ("ok".equals(res)) {
+                    if (err > 0) {
+                        nodeStore.addNode(name, node);
+                    }
                     logger.info("Node [{}] check ok", name);
                     return;
                 } else {
+                    // 有错误先remove节点，防止下一次定时重复检查该节点
+                    if (err == 0) {
+                        nodeStore.removeNode(name);
+                    }
                     err++;
                     logger.error("Node [{}] check failed, err: {}, try: {}", name, res, err);
                 }
             } catch (RestClientException e) {
+                if (err == 0) {
+                    nodeStore.removeNode(name);
+                }
                 err++;
                 logger.error("Node [{}] check failed, err: {}, try: {}", name, e.getMessage(), err);
             }
@@ -48,7 +60,6 @@ public class HealthChecker {
         }
         if (err > 0) {
             logger.info("Node [{}] offline", name);
-            nodeStore.removeNode(name);
         }
     }
 }

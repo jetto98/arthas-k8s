@@ -4,18 +4,21 @@ import com.alibaba.arthas.tunnel.server.app.exception.ServerException;
 import com.alibaba.arthas.tunnel.server.model.NodeInfo;
 import com.alibaba.arthas.tunnel.server.model.PodInfo;
 import com.alibaba.arthas.tunnel.server.node.DefaultNodeEndpoint;
-import com.alibaba.arthas.tunnel.server.node.InMemoryNodeStore;
-import com.alibaba.arthas.tunnel.server.node.PodIpStore;
-import com.alibaba.arthas.tunnel.server.node.RegisterKeyStore;
-import org.apache.logging.log4j.util.Strings;
+import com.alibaba.arthas.tunnel.server.node.service.AgentInstallService;
+import com.alibaba.arthas.tunnel.server.node.store.InMemoryNodeStore;
+import com.alibaba.arthas.tunnel.server.node.store.PodIpStore;
+import com.alibaba.arthas.tunnel.server.node.store.RegisterKeyStore;
+import io.kubernetes.client.openapi.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,18 +40,28 @@ public class ArthasAgentNodeController {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private AgentInstallService installService;
+
+    @Value("${self.host}")
+    private String wsHost;
+
+    @Value("${agent.port}")
+    private String agentPort;
+
     @PostMapping("/init")
-    public String initNode(@RequestBody PodInfo podInfo) {
-        String uuid = keyStore.generateKey();
+    public String initNode(@RequestBody PodInfo podInfo) throws IOException, InterruptedException, ApiException {
+        String key = keyStore.generateKey();
         podIpStore.put(podInfo.getNamespace() + "_" + podInfo.getName(), podInfo.getPodIp());
-        return uuid;
+        installService.install(podInfo.getNamespace(), podInfo.getName(), podInfo.getContainerName(), key, agentPort);
+        return key;
     }
 
     @PostMapping("/register/{key}")
     public String register(@PathVariable("key") String registerKey, @RequestBody NodeInfo nodeInfo) {
         if (!keyStore.checkKey(registerKey)) {
             logger.error("Invalid register key.");
-//            return "failed";
+            return "failed";
         }
         if (!StringUtils.hasLength(nodeInfo.getIp())) {
             String podIp = podIpStore.getPodIp(nodeInfo.getName());
@@ -89,7 +102,7 @@ public class ArthasAgentNodeController {
         body.put("pid", pid);
         body.put("agentId", nodeName);
         // todo: dynamic get
-        body.put("tunnelServer", "ws://arthas-center-svc:7777/ws");
+        body.put("tunnelServer", String.format("ws://%s:7777/ws", wsHost));
         String url = node.httpAddress() + DefaultNodeEndpoint.ATTACH;
         ResponseEntity<String> res = restTemplate.postForEntity(url, body, String.class);
         if (!res.getStatusCode().is2xxSuccessful()) {

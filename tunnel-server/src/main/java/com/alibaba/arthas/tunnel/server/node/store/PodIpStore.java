@@ -1,10 +1,8 @@
-package com.alibaba.arthas.tunnel.server.node;
+package com.alibaba.arthas.tunnel.server.node.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
-
-import java.util.UUID;
 
 public class PodIpStore {
     private final static Logger logger = LoggerFactory.getLogger(PodIpStore.class);

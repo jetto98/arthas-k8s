@@ -7,10 +7,12 @@ spec:
     app: arthas-center-server
   ports:
     - protocol: TCP
+      name: http
       port: 8080
       targetPort: 8080
       nodePort: 30080
     - protocol: TCP
+      name: ws
       port: 7777
       targetPort: 7777
       nodePort: 30081

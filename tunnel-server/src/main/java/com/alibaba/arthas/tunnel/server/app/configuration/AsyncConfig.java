@@ -22,4 +22,14 @@ public class AsyncConfig {
         return asyncTaskExecutor;
     }
 
+    @Bean("asyncKubeExecExecutor")
+    public AsyncTaskExecutor asyncKubeExecExecutor() {
+        ThreadPoolTaskExecutor asyncTaskExecutor = new ThreadPoolTaskExecutor();
+        asyncTaskExecutor.setMaxPoolSize(MAX_POOL_SIZE);
+        asyncTaskExecutor.setCorePoolSize(CORE_POOL_SIZE);
+        asyncTaskExecutor.setThreadNamePrefix("async-k8s-thread-pool-");
+        asyncTaskExecutor.initialize();
+        return asyncTaskExecutor;
+    }
+
 }

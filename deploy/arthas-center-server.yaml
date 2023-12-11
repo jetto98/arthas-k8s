@@ -17,8 +17,11 @@ spec:
     spec:
       containers:
         - name: arthas-center-server
-          image: jetto/arthas-server:1.0.3
+          image: jetto/arthas-server:1.0.6
           imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: arthas-center-cm
           ports:
             - containerPort: 8080
             - containerPort: 7777
