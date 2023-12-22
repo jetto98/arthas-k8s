@@ -24,8 +24,11 @@ public class RegisterKeyStore {
         if (valueWrapper == null) {
             return false;
         }
-        cache.evict(key);
         return true;
+    }
+
+    public void removeKey(String key) {
+        cache.evict(key);
     }
 
     public String generateKey() {

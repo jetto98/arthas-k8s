@@ -21,6 +21,9 @@ public class KubernetesController {
         V1PodList v1PodList = api.listNamespacedPod(namespace, null, null, null, null, null, null, null, null, null, false);
         List<PodInfo> res = new ArrayList<>();
         for (V1Pod item : v1PodList.getItems()) {
+            if (!"Running".equals(item.getStatus().getPhase())) {
+               continue;
+            }
             PodInfo podInfo = new PodInfo();
             podInfo.setName(Objects.requireNonNull(item.getMetadata()).getName());
             podInfo.setPodIp(Objects.requireNonNull(item.getStatus()).getPodIP());

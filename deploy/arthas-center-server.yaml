@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: arthas-center-server
-          image: jetto/arthas-server:1.0.12
+          image: jetto/arthas-server:1.0.13
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:

@@ -77,6 +77,7 @@ public class ArthasAgentNodeController {
             nodeInfo.setIp(podIp);
         }
         nodeStore.addNode(nodeInfo.getName(), nodeInfo);
+        keyStore.removeKey(registerKey);
         logger.info("node [{}] is registered.", nodeInfo.getName());
         return "ok";
     }
