@@ -62,6 +62,17 @@ public class ArthasAgentNodeController {
         return key;
     }
 
+    @GetMapping("/init/status/{key}")
+    public String initStatus(@PathVariable("key") String registerKey) {
+        if (!keyStore.checkKey(registerKey)) {
+            return "ok";
+        }
+        if (keyStore.secondsSinceGenerate(registerKey) > 60) {
+            return "failed";
+        }
+        return "pending";
+    }
+
     @PostMapping("/register/{key}")
     public String register(@PathVariable("key") String registerKey, @RequestBody NodeInfo nodeInfo) {
         if (!keyStore.checkKey(registerKey)) {

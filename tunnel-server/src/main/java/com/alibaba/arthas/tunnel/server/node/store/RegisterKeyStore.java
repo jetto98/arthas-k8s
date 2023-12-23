@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class RegisterKeyStore {
@@ -31,9 +32,19 @@ public class RegisterKeyStore {
         cache.evict(key);
     }
 
+    public long secondsSinceGenerate(String key) {
+        Cache.ValueWrapper valueWrapper = cache.get(key);
+        if (valueWrapper == null) {
+            return Long.MAX_VALUE;
+        }
+        Date start = (Date) valueWrapper;
+        long ms = (new Date()).getTime() - start.getTime();
+        return ms / 1000;
+    }
+
     public String generateKey() {
         String uuid = UUID.randomUUID().toString();
-        cache.put(uuid, 1);
+        cache.put(uuid, new Date());
         return uuid;
     }
 

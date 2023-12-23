@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.StringJoiner;
 
 @Service
@@ -33,21 +30,10 @@ public class AgentInstallService {
     public void install(String namespace, String podName, String containerName, String registerKey, String agentPort) throws IOException, ApiException, InterruptedException {
         Exec exec = new Exec();
         String[] command = {"sh", "-c", generateInstallCmd(registerKey, namespace, podName, agentPort)};
-        Process process = exec.exec(namespace, podName, command, containerName, false, false);
+        Process process = exec.exec(namespace, podName, command, containerName, true, false);
         logger.info(command[2]);
         process.waitFor();
-        try (InputStream inputStream = process.getInputStream()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            StringBuilder sb = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("/n");
-            }
-            logger.info(sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-        }
+        logger.info("exit code: {}", process.exitValue());
     }
 
     private String generateInstallCmd(String registerKey, String namespace, String podName, String agentPort) {
