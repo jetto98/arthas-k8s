@@ -5,6 +5,7 @@ import com.alibaba.arthas.tunnel.server.app.exception.ServerException;
 import com.alibaba.arthas.tunnel.server.cluster.TunnelClusterStore;
 import com.alibaba.arthas.tunnel.server.model.NodeInfo;
 import com.alibaba.arthas.tunnel.server.model.PodInfo;
+import com.alibaba.arthas.tunnel.server.model.TunnelStatusInfo;
 import com.alibaba.arthas.tunnel.server.node.DefaultNodeEndpoint;
 import com.alibaba.arthas.tunnel.server.node.service.AgentInstallService;
 import com.alibaba.arthas.tunnel.server.node.store.InMemoryNodeStore;
@@ -101,12 +102,17 @@ public class ArthasAgentNodeController {
     }
 
     @GetMapping("/tunnel/{agentId}/status")
-    public String checkTunnelEnable(@PathVariable("agentId") String agentId) {
+    public TunnelStatusInfo checkTunnelEnable(@PathVariable("agentId") String agentId) {
         AgentClusterInfo agent = clusterStore.findAgent(agentId);
+        NodeInfo node = nodeStore.getNode(agentId);
+        TunnelStatusInfo tunnelStatusInfo = new TunnelStatusInfo();
+        tunnelStatusInfo.setAgentId(agentId);
+        tunnelStatusInfo.setConnected(true);
+        tunnelStatusInfo.setAttachedPid(node.getAttachedPid());
         if (agent == null) {
-            return "0";
+            tunnelStatusInfo.setConnected(false);
         }
-        return "1";
+        return tunnelStatusInfo;
     }
 
     @GetMapping("/{id}/jps")
