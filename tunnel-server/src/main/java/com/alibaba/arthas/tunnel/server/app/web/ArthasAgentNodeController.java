@@ -136,6 +136,8 @@ public class ArthasAgentNodeController {
         if (!res.getStatusCode().is2xxSuccessful()) {
             throw new ServerException(String.format("Node [%s] attach failed.", nodeName));
         }
+        node.setAttachedPid(pid);
+        nodeStore.addNode(nodeName, node);
         return res.getBody();
     }
 

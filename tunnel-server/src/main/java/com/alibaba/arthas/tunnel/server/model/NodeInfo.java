@@ -10,6 +10,17 @@ public class NodeInfo {
 
     private boolean tunnelConnected;
 
+    private String attachedPid;
+
+    public String getAttachedPid() {
+        return attachedPid;
+    }
+
+    public void setAttachedPid(String attachedPid) {
+        this.attachedPid = attachedPid;
+    }
+
+
     public String getIp() {
         return ip;
     }
