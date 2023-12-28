@@ -30,7 +30,7 @@ public class AgentInstallService {
     public void install(String namespace, String podName, String containerName, String registerKey, String agentPort) throws IOException, ApiException, InterruptedException {
         Exec exec = new Exec();
         String[] command = {"sh", "-c", generateInstallCmd(registerKey, namespace, podName, agentPort)};
-        Process process = exec.exec(namespace, podName, command, containerName, true, false);
+        Process process = exec.exec(namespace, podName, command, containerName, false, false);
         logger.info(command[2]);
         process.waitFor();
         logger.info("exit code: {}", process.exitValue());

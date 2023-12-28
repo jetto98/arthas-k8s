@@ -102,9 +102,12 @@ public class ArthasAgentNodeController {
     }
 
     @GetMapping("/tunnel/{agentId}/status")
-    public TunnelStatusInfo checkTunnelEnable(@PathVariable("agentId") String agentId) {
+    public TunnelStatusInfo checkTunnelEnable(@PathVariable("agentId") String agentId) throws ServerException {
         AgentClusterInfo agent = clusterStore.findAgent(agentId);
         NodeInfo node = nodeStore.getNode(agentId);
+        if (node == null) {
+            throw new ServerException("该节点不存在！");
+        }
         TunnelStatusInfo tunnelStatusInfo = new TunnelStatusInfo();
         tunnelStatusInfo.setAgentId(agentId);
         tunnelStatusInfo.setConnected(true);

@@ -37,14 +37,14 @@ public class RegisterKeyStore {
         if (valueWrapper == null) {
             return Long.MAX_VALUE;
         }
-        Date start = (Date) valueWrapper;
-        long ms = (new Date()).getTime() - start.getTime();
+        Long start = (Long) valueWrapper.get();
+        long ms = (new Date()).getTime() - start;
         return ms / 1000;
     }
 
     public String generateKey() {
         String uuid = UUID.randomUUID().toString();
-        cache.put(uuid, new Date());
+        cache.put(uuid, (new Date()).getTime());
         return uuid;
     }
 

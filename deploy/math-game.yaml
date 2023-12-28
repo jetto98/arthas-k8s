@@ -19,5 +19,8 @@ spec:
         - name: math-game
           image: jetto/math-game:1.0.0
           imagePullPolicy: IfNotPresent
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: ""
       restartPolicy: Always
       
