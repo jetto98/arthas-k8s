@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "arthas-center.fullname" . }}-cm
+data:
+  SELF_HOST: "{{ include "arthas-center.fullname" . }}-svc.{{ .Release.Namespace }}.svc.cluster.local"
+  AGENT_INIT_SHELL_DOWN_URL: "{{ .Values.application.agent.initUrl }}"
+  AGENT_TAR_DOWN_URL: "{{ .Values.application.agent.tarUrl }}"
+  AGENT_PORT: "{{ .Values.application.agent.port }}"

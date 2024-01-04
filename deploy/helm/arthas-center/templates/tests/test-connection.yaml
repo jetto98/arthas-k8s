@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "arthas-center.fullname" . }}-test-connection"
+  labels:
+    {{- include "arthas-center.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "arthas-center.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

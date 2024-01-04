@@ -15,6 +15,6 @@ spec:
       name: ws
       port: 7777
       targetPort: 7777
-      nodePort: 30081
+      nodePort: 30082
   type: NodePort
   

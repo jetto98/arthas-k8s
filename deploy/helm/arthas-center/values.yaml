@@ -1,0 +1,55 @@
+# Default values for arthas-center.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+server:
+  image:
+    repository: jetto/arthas-server
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "1.0.22"
+
+imagePullSecrets: [ ]
+nameOverride: ""
+fullnameOverride: "arthas-center"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: { }
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: { }
+
+service:
+  server:
+    type: NodePort
+    http:
+      port: 8080
+      nodePort: 30080
+    ws:
+      port: 7777
+      nodePort: 30081
+
+resources: { }
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+application:
+  agent:
+    initUrl: "http://192.168.8.6:5244/d/as-agent.sh?sign=M878ApRgjUIkW0iQtcAwaCl1a8-jENKWbma2vvWcqgA=:0"
+    tarUrl: "http://192.168.8.6:5244/d/as-agent.tar.gz?sign=1nTqxaevQtpTPzYHS5GfDBJ97uLIUAqg8B2wbgnZ1Oc=:0"
+    port: "13736"
