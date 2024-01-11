@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "arthas-center.fullname" . }}-web-svc
+  labels:
+    {{- include "arthas-center-web.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.server.type }}
+  ports:
+    - port: {{ .Values.service.web.http.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if eq "NodePort" .Values.service.web.type }}
+      nodePort: {{ .Values.service.web.http.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "arthas-center-web.selectorLabels" . | nindent 4 }}

@@ -11,6 +11,13 @@ server:
     # Overrides the image tag whose default is the chart appVersion.
     tag: "1.0.22"
 
+web:
+  image:
+    repository: jetto/arthas-next-web
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "1.0.0"
+
 imagePullSecrets: [ ]
 nameOverride: ""
 fullnameOverride: "arthas-center"
@@ -31,10 +38,15 @@ service:
     type: NodePort
     http:
       port: 8080
-      nodePort: 30080
+      nodePort: 30088
     ws:
       port: 7777
-      nodePort: 30081
+      nodePort: 30087
+  web:
+    type: NodePort
+    http:
+      port: 3000
+      nodePort: 30089
 
 resources: { }
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -50,6 +62,6 @@ resources: { }
 
 application:
   agent:
-    initUrl: "http://192.168.8.6:5244/d/as-agent.sh?sign=M878ApRgjUIkW0iQtcAwaCl1a8-jENKWbma2vvWcqgA=:0"
-    tarUrl: "http://192.168.8.6:5244/d/as-agent.tar.gz?sign=1nTqxaevQtpTPzYHS5GfDBJ97uLIUAqg8B2wbgnZ1Oc=:0"
+    initUrl: "http://192.168.8.6:5244/d/as-agent.sh?sign=R1Z6gWZBuws4zsNDnn24Oxq_plILPqRzDeimcP-jrDg=:0"
+    tarUrl: "http://192.168.8.6:5244/d/as-agent.tar.gz?sign=pqt9mn2GaPiJ7mIpUSIEeEOnrqmxycLm40nboLZAx5M=:0"
     port: "13736"

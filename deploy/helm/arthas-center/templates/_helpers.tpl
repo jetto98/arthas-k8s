@@ -43,10 +43,30 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Common labels
+*/}}
+{{- define "arthas-center-web.labels" -}}
+helm.sh/chart: {{ include "arthas-center.chart" . }}
+{{ include "arthas-center-web.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "arthas-center.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "arthas-center.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels for web
+*/}}
+{{- define "arthas-center-web.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "arthas-center.name" . }}-web
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
