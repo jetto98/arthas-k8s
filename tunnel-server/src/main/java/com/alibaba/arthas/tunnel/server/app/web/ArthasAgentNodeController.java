@@ -8,6 +8,7 @@ import com.alibaba.arthas.tunnel.server.model.PodInfo;
 import com.alibaba.arthas.tunnel.server.model.TunnelStatusInfo;
 import com.alibaba.arthas.tunnel.server.node.DefaultNodeEndpoint;
 import com.alibaba.arthas.tunnel.server.node.service.AgentInstallService;
+import com.alibaba.arthas.tunnel.server.node.service.HealthChecker;
 import com.alibaba.arthas.tunnel.server.node.store.InMemoryNodeStore;
 import com.alibaba.arthas.tunnel.server.node.store.PodIpStore;
 import com.alibaba.arthas.tunnel.server.node.store.RegisterKeyStore;
@@ -49,6 +50,9 @@ public class ArthasAgentNodeController {
     @Autowired
     private AgentInstallService installService;
 
+    @Autowired
+    private HealthChecker healthChecker;
+
     @Value("${self.host}")
     private String wsHost;
 
@@ -57,8 +61,17 @@ public class ArthasAgentNodeController {
 
     @PostMapping("/init")
     public String initNode(@RequestBody PodInfo podInfo) throws IOException, InterruptedException, ApiException {
+        String nodeName = podInfo.getNamespace() + "_" + podInfo.getName();
+        if (null != nodeStore.getNode(nodeName)) {
+            return "[warn]节点已存在";
+        }
+        if (healthChecker.checkPodAgent(podInfo)) {
+            NodeInfo nodeInfo = new NodeInfo(podInfo.getPodIp(), agentPort, nodeName);
+            nodeStore.addNode(nodeName, nodeInfo);
+            return "[warn]节点已存在agent, 已重新添加";
+        }
         String key = keyStore.generateKey();
-        podIpStore.put(podInfo.getNamespace() + "_" + podInfo.getName(), podInfo.getPodIp());
+        podIpStore.put(nodeName, podInfo.getPodIp());
         installService.install(podInfo.getNamespace(), podInfo.getName(), podInfo.getContainerName(), key, agentPort);
         return key;
     }
@@ -163,4 +176,5 @@ public class ArthasAgentNodeController {
         }
         return res.getBody();
     }
+
 }

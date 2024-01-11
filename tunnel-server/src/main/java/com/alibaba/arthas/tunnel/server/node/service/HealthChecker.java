@@ -2,11 +2,13 @@ package com.alibaba.arthas.tunnel.server.node.service;
 
 import com.alibaba.arthas.tunnel.server.model.HealthCheckInfo;
 import com.alibaba.arthas.tunnel.server.model.NodeInfo;
+import com.alibaba.arthas.tunnel.server.model.PodInfo;
 import com.alibaba.arthas.tunnel.server.node.DefaultNodeEndpoint;
 import com.alibaba.arthas.tunnel.server.node.store.InMemoryNodeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -22,6 +24,9 @@ public class HealthChecker {
 
     @Autowired
     private InMemoryNodeStore nodeStore;
+
+    @Value("${agent.port}")
+    private String agentPort;
 
     private HealthCheckInfo info;
 
@@ -60,6 +65,21 @@ public class HealthChecker {
         }
         if (err > 0) {
             logger.info("Node [{}] offline", name);
+        }
+    }
+
+    public boolean checkPodAgent(PodInfo podInfo) {
+        String url = String.format("http://%s:%s", podInfo.getPodIp(), agentPort) + DefaultNodeEndpoint.HEALTH_CHECK;
+        try {
+            String res = restTemplate.getForObject(url, String.class);
+            if ("ok".equals(res)) {
+                logger.info("pod [{}][{}] has already installed agent", podInfo.getNamespace(), podInfo.getName());
+                return true;
+            } else {
+                return false;
+            }
+        } catch (RestClientException e) {
+            return false;
         }
     }
 }

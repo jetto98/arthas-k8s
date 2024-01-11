@@ -12,6 +12,13 @@ public class NodeInfo {
 
     private String attachedPid;
 
+    public NodeInfo(String ip, String port, String name) {
+        this.ip = ip;
+        this.port = port;
+        this.name = name;
+        this.tunnelConnected = false;
+    }
+
     public String getAttachedPid() {
         return attachedPid;
     }

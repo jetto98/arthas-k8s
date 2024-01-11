@@ -9,7 +9,7 @@ server:
     repository: jetto/arthas-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "1.0.22"
+    tag: "1.0.26"
 
 web:
   image:
@@ -65,3 +65,4 @@ application:
     initUrl: "http://192.168.8.6:5244/d/as-agent.sh?sign=R1Z6gWZBuws4zsNDnn24Oxq_plILPqRzDeimcP-jrDg=:0"
     tarUrl: "http://192.168.8.6:5244/d/as-agent.tar.gz?sign=pqt9mn2GaPiJ7mIpUSIEeEOnrqmxycLm40nboLZAx5M=:0"
     port: "13736"
+  host: "127.0.0.1"

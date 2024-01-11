@@ -3,7 +3,6 @@ kind: ConfigMap
 metadata:
   name: {{ include "arthas-center.fullname" . }}-web-cm
 data:
-  SELF_HOST: "{{ include "arthas-center.fullname" . }}-svc.{{ .Release.Namespace }}.svc.cluster.local"
-  AGENT_INIT_SHELL_DOWN_URL: "{{ .Values.application.agent.initUrl }}"
-  AGENT_TAR_DOWN_URL: "{{ .Values.application.agent.tarUrl }}"
-  AGENT_PORT: "{{ .Values.application.agent.port }}"
+  NEXT_PUBLIC_BACKEND_HOST: "{{ .Values.application.host }}"
+  NEXT_PUBLIC_BACKEND_HTTP_PORT: "{{ .Values.service.server.http.nodePort }}"
+  NEXT_PUBLIC_BACKEND_WS_PORT: "{{ .Values.service.server.ws.nodePort }}"
