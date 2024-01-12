@@ -1,13 +1,12 @@
 package com.alibaba.arthas.tunnel.server.app.configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.alibaba.arthas.tunnel.server.utils.InetAddressUtil;
+import com.taobao.arthas.common.ArthasConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.arthas.tunnel.server.utils.InetAddressUtil;
-import com.taobao.arthas.common.ArthasConstants;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -161,5 +160,4 @@ public class ArthasProperties {
             this.settings = settings;
         }
     }
-
 }

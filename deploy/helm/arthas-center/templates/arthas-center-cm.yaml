@@ -7,3 +7,4 @@ data:
   AGENT_INIT_SHELL_DOWN_URL: "{{ .Values.application.agent.initUrl }}"
   AGENT_TAR_DOWN_URL: "{{ .Values.application.agent.tarUrl }}"
   AGENT_PORT: "{{ .Values.application.agent.port }}"
+  NAMESPACE_WHITELIST: "{{ .Values.application.kubernetes.namespace.whitelist }}"
