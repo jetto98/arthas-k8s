@@ -19,6 +19,10 @@ public class NodeInfo {
         this.tunnelConnected = false;
     }
 
+    public NodeInfo() {
+
+    }
+
     public String getAttachedPid() {
         return attachedPid;
     }

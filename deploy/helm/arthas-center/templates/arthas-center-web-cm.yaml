@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: {{ include "arthas-center.fullname" . }}-web-cm
 data:
-  NEXT_PUBLIC_BACKEND_HOST: "{{ .Values.application.host }}"
-  NEXT_PUBLIC_BACKEND_HTTP_PORT: "{{ .Values.service.server.http.nodePort }}"
-  NEXT_PUBLIC_BACKEND_WS_PORT: "{{ .Values.service.server.ws.nodePort }}"
+  BACKEND_HOST: "{{ .Values.application.host }}"
+  BACKEND_HTTP_PORT: "{{ .Values.service.server.http.nodePort }}"
+  BACKEND_WS_PORT: "{{ .Values.service.server.ws.nodePort }}"

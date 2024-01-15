@@ -29,14 +29,13 @@ public class KubernetesController {
         V1PodList v1PodList = api.listNamespacedPod(namespace, null, null, null, null, null, null, null, null, null, false);
         List<PodInfo> res = new ArrayList<>();
         for (V1Pod item : v1PodList.getItems()) {
-            if (!"Running".equals(item.getStatus().getPhase())) {
-                continue;
+            if ("Running".equals(item.getStatus().getPhase()) && item.getMetadata().getDeletionTimestamp() == null) {
+                PodInfo podInfo = new PodInfo();
+                podInfo.setName(Objects.requireNonNull(item.getMetadata()).getName());
+                podInfo.setPodIp(Objects.requireNonNull(item.getStatus()).getPodIP());
+                podInfo.setNamespace(item.getMetadata().getNamespace());
+                res.add(podInfo);
             }
-            PodInfo podInfo = new PodInfo();
-            podInfo.setName(Objects.requireNonNull(item.getMetadata()).getName());
-            podInfo.setPodIp(Objects.requireNonNull(item.getStatus()).getPodIP());
-            podInfo.setNamespace(item.getMetadata().getNamespace());
-            res.add(podInfo);
         }
         return res;
     }
