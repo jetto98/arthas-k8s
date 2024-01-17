@@ -55,6 +55,18 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Common labels
+*/}}
+{{- define "arthas-center-nginx.labels" -}}
+helm.sh/chart: {{ include "arthas-center.chart" . }}
+{{ include "arthas-center-nginx.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "arthas-center.selectorLabels" -}}
@@ -67,6 +79,15 @@ Selector labels for web
 */}}
 {{- define "arthas-center-web.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "arthas-center.name" . }}-web
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+{{/*
+Selector labels for nginx
+*/}}
+{{- define "arthas-center-nginx.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "arthas-center.name" . }}-nginx
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

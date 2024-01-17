@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "arthas-center-web.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.server.type }}
+  type: {{ .Values.service.web.type }}
   ports:
     - port: {{ .Values.service.web.http.port }}
       targetPort: http

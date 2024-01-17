@@ -4,5 +4,10 @@ metadata:
   name: {{ include "arthas-center.fullname" . }}-web-cm
 data:
   BACKEND_HOST: "{{ .Values.application.host }}"
+  {{- if .Values.nginx.enable }}
+  BACKEND_HTTP_PORT: "{{ .Values.service.nginx.http.nodePort }}"
+  BACKEND_WS_PORT: "{{ .Values.service.nginx.http.nodePort }}"
+  {{- else }}
   BACKEND_HTTP_PORT: "{{ .Values.service.server.http.nodePort }}"
   BACKEND_WS_PORT: "{{ .Values.service.server.ws.nodePort }}"
+  {{- end }}
