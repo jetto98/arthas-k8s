@@ -33,7 +33,7 @@ public class AgentInstallService {
     public void install(String namespace, String podName, String containerName, String registerKey, String agentPort) throws IOException, ApiException, InterruptedException {
         logger.info("start install agent to {}|{}|{}", namespace, podName, containerName);
         Exec exec = new Exec();
-        String[] command = {"sh", "-c", generateInstallCmd(registerKey, namespace, podName, agentPort, checkCMDInPod(namespace, podName, containerName, "curl"))};
+        String[] command = {"sh", "-c", generateInstallCmd(registerKey, namespace, podName, agentPort, checkCMDInPod(namespace, podName, containerName, "wget"))};
         logger.info(command[2]);
         exec.exec(namespace, podName, command, containerName, false, false);
     }

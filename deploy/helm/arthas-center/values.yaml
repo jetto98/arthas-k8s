@@ -22,7 +22,7 @@ nginx:
   enable: false
   image:
     repository: nginx
-    tag: "1.14.2"
+    tag: "1.20"
 
 
 imagePullSecrets: [ ]

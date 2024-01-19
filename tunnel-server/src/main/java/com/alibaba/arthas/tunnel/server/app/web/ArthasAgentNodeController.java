@@ -17,6 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -175,6 +178,19 @@ public class ArthasAgentNodeController {
             throw new ServerException(String.format("Node [%s] stop failed.", nodeName));
         }
         return res.getBody();
+    }
+
+    @PostMapping("/proxy/{id}")
+    public ResponseEntity<?> apiForward(@PathVariable("id") String nodeName, @RequestBody String body) throws ServerException {
+        NodeInfo node = nodeStore.getNode(nodeName);
+        if (null == node) {
+            throw new ServerException(String.format("Node name [%s] does not exist.", nodeName));
+        }
+        String url = node.arthasApiAddress();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+        return restTemplate.postForEntity(url, request, Object.class);
     }
 
 }
