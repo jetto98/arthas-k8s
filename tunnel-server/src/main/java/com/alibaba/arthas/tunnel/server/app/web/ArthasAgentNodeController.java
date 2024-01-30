@@ -182,6 +182,7 @@ public class ArthasAgentNodeController {
 
     @PostMapping("/proxy/{id}")
     public ResponseEntity<?> apiForward(@PathVariable("id") String nodeName, @RequestBody String body) throws ServerException {
+        logger.info("proxy:{},{}", nodeName, body);
         NodeInfo node = nodeStore.getNode(nodeName);
         if (null == node) {
             throw new ServerException(String.format("Node name [%s] does not exist.", nodeName));

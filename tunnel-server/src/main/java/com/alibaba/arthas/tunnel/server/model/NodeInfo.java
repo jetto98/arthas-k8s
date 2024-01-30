@@ -69,6 +69,6 @@ public class NodeInfo {
     }
 
     public String arthasApiAddress() {
-        return "http://" + this.ip + ":8563" + "/api";
+        return httpAddress() + "/api";
     }
 }
